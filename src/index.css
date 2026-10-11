@@ -1,0 +1,332 @@
+/* 背景がいつも夜っぽい情景動画なので、UI は暗いすりガラスのパネルで統一する */
+:root {
+  --text: #f4efe6;
+  --text-dim: rgba(244, 239, 230, 0.68);
+  --panel: rgba(20, 18, 28, 0.55);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --accent: #f2b880; /* 暖かいランプ色 */
+  --accent-text: #2a1d12;
+  --radius: 16px;
+  --gutter: 16px;
+
+  color-scheme: dark;
+  font-family: system-ui, -apple-system, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #14121c;
+  overflow: hidden;
+}
+
+/* ---- 背景 ---- */
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+.scene-bg video,
+.scene-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 縦長の画面でも余白なく埋める（左右が切れる） */
+  display: block;
+}
+/* 文字が読めるよう、上下だけうっすら暗くする */
+.scene-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.35), transparent 25%, transparent 60%, rgba(0, 0, 0, 0.45));
+}
+
+/* ---- 配置 ---- */
+.layout {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--gutter);
+  gap: var(--gutter);
+}
+.center {
+  display: grid;
+  place-items: center;
+}
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--gutter);
+}
+
+/* ---- 共通パーツ ---- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin: 0;
+}
+button {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+button:focus-visible,
+input:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+a {
+  color: var(--accent);
+}
+
+/* ---- ヘッダー ---- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+.scene-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 999px;
+}
+.scene-switcher button {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+}
+.scene-title {
+  min-width: 10em;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.links {
+  display: flex;
+  gap: 14px;
+  font-size: 0.85rem;
+}
+.links a {
+  color: var(--text);
+  text-decoration: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+.links a:hover {
+  color: var(--accent);
+}
+
+/* ---- タイマー ---- */
+/* 背景はほぼ透明（うっすら暗く＋ごく弱いぼかし）。文字は影で読みやすくする */
+.timer.panel {
+  background: rgba(20, 18, 28, 0.12);
+  border-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.timer {
+  padding: 20px 28px 16px;
+  text-align: center;
+  min-width: 300px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+/* 背景が透けるので、ボタン類はそれぞれに暗い下地を持たせて読めるようにする */
+.timer button {
+  text-shadow: none;
+}
+.timer .mode-tabs {
+  background: rgba(10, 9, 14, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.timer .mode-tabs button {
+  color: rgba(244, 239, 230, 0.8);
+}
+.timer .mode-tabs button[aria-selected='true'] {
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.timer .controls button:not(.primary) {
+  background: rgba(10, 9, 14, 0.55);
+  border-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.timer .controls button:not(.primary):hover {
+  background: rgba(10, 9, 14, 0.7);
+}
+.timer .controls .primary {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.timer .settings summary {
+  display: inline-block;
+  color: var(--text);
+  background: rgba(10, 9, 14, 0.45);
+  border-radius: 999px;
+  padding: 3px 12px;
+  text-shadow: none;
+}
+.timer .settings[open] {
+  background: rgba(10, 9, 14, 0.45);
+  border-radius: 12px;
+  padding: 6px 8px 10px;
+}
+.timer .settings[open] summary {
+  background: none;
+}
+.timer .settings label {
+  color: var(--text);
+}
+.mode-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+}
+.mode-tabs button {
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+}
+.mode-tabs button[aria-selected='true'] {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text);
+}
+.time {
+  font-size: clamp(4rem, 14vw, 7rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums; /* 数字の幅をそろえて、カウント中に横揺れしないように */
+  line-height: 1.1;
+  margin: 8px 0 14px;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.controls .primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: transparent;
+  font-weight: 600;
+  padding: 8px 24px;
+}
+.settings {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.settings summary {
+  cursor: pointer;
+}
+.settings label {
+  display: inline-block;
+  margin: 8px 8px 0;
+}
+.settings input {
+  width: 4em;
+  font: inherit;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 3px 6px;
+}
+
+/* ---- 音楽（枠なしの小さなプレイヤーだけ） ---- */
+/* YouTube の規約で埋め込みは縦横とも 200px 以上。高さは下限、横幅だけ詰めている（16:9 なので上下に少し黒帯） */
+.player {
+  display: block;
+  width: 240px;
+  height: 200px;
+  background: #000;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden; /* 中の iframe の角も丸くする */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+.player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---- スマホ（縦長） ---- */
+@media (max-width: 760px) {
+  body {
+    overflow: auto;
+  }
+  .layout {
+    min-height: 100%;
+    height: auto;
+  }
+  .header {
+    flex-wrap: wrap;
+  }
+  .scene-switcher {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .center {
+    padding: 8vh 0;
+  }
+  .timer {
+    min-width: 0;
+    width: 100%;
+  }
+  .bottom {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
