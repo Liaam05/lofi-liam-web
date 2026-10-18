@@ -24,7 +24,7 @@ export const scenes: Scene[] = [
   { id: 'ep12_autumn_sunset_room', title: '秋の夕暮れの部屋', youtubeId: null },
   { id: 'ep13_halloween_night_room', title: 'ハロウィンの夜の部屋', youtubeId: null },
   { id: 'ep14_quiet_seaside_waves', title: '静かな海辺の夜', youtubeId: null },
-  { id: 'ep15_kyoto_autumn_room', title: '京都・秋の和室', youtubeId: null },
+  { id: 'ep15_kyoto_autumn_room', title: '京都・秋の和室', youtubeId: 'oEFiwiS3Q-I' },
 ]
 
 // import.meta.env.BASE_URL = 公開先のパス（GitHub Pages では "/lofi-liam-web/"）
